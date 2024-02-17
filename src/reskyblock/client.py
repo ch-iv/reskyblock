@@ -2,5 +2,5 @@ __all__ = ("Client",)
 
 
 class Client:
-    def __init__(self):
+    def __init__(self) -> None:
         raise NotImplementedError
