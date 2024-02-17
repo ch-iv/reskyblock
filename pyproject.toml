@@ -147,4 +147,4 @@ docstring-code-format = true
 docstring-code-line-length = 88
 
 [tool.codespell]
-skip = 'tests/data/item_bytes.txt,tests/data/auctions.json,tests/data/auctions_ended.json'
+skip = 'tests/data/item_bytes.txt,tests/data/auctions.json,tests/data/auctions_ended.json,tests/data/bazaar.json'
