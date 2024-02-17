@@ -1,12 +1,13 @@
 [project]
 name = "reskyblock"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python API wrapper for Hypixel SkyBlock"
 authors = [
     {name = "ch-iv", email = "alicesummer38@gmail.com"},
 ]
 dependencies = [
     "pyright>=1.1.350",
+    "httpx>=0.26.0",
 ]
 requires-python = ">=3.12"
 readme = "README.md"
@@ -33,6 +34,7 @@ test = [
     "covdefaults>=2.3.0",
     "pytest-cov>=4.1.0",
     "pytest-xdist>=3.5.0",
+    "pytest-httpx>=0.29.0",
 ]
 lint = [
     "pre-commit>=3.6.1",
@@ -123,6 +125,7 @@ lint.ignore = [
   "PLW2901", # pylint - for loop variable overwritten by assignment target
   "RUF012", # Ruff-specific rule - annotated with classvar
   "ISC001", # Ruff formatter incompatible
+  "S101", # Use of `assert` detected
 ]
 src = ["reskyblock", "tests"]
 target-version = "py312"
