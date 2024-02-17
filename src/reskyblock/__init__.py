@@ -1,1 +1,4 @@
-__all__ = "client"
+from reskyblock.client import Client
+
+
+__all__ = ("Client",)
