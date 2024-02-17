@@ -1,3 +1,3 @@
-from reskyblock.http.http_adapter import HTTPXClient
+from reskyblock.http.http_adapter import AbstractHTTPClient, HTTPXClient
 
-__all__ = ("HTTPXClient",)
+__all__ = ("HTTPXClient", "AbstractHTTPClient")

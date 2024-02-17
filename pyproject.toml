@@ -8,6 +8,8 @@ authors = [
 dependencies = [
     "pyright>=1.1.350",
     "httpx>=0.26.0",
+    "msgspec>=0.18.6",
+    "nbt>=1.5.1",
 ]
 requires-python = ">=3.12"
 readme = "README.md"
@@ -143,3 +145,6 @@ known-first-party = ["reskyblock", "tests"]
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = 88
+
+[tool.codespell]
+skip = 'tests/data/item_bytes.txt'

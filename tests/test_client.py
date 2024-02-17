@@ -3,6 +3,18 @@ import pytest
 from reskyblock import Client
 
 
+@pytest.fixture
+def client() -> Client:
+    return Client()
+
+
 def test_client() -> None:
-    with pytest.raises(NotImplementedError):
-        _ = Client()
+    _ = Client()
+
+
+def test_get_auctions(client: Client) -> None:
+    client.get_auctions()
+
+
+def test_get_auctions_ended(client: Client) -> None:
+    client.get_auctions_ended()
