@@ -39,3 +39,4 @@ repos:
     hooks:
       - id: slotscheck
         exclude: "test_*|docs|.github"
+        entry: env PYTHONPATH=src slotscheck --verbose

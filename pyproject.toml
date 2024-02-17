@@ -28,3 +28,4 @@ lint = [
     "mypy>=1.8.0",
     "slotscheck>=0.17.3",
 ]
+slotscheck = []
