@@ -1,3 +1,4 @@
+import logging
 import time
 from collections.abc import Callable, Iterator
 
@@ -49,7 +50,11 @@ class Client:
             if next_update > time.time():  # the next update is in the future
                 continue
 
-            api_endpoint = getter()
+            try:
+                api_endpoint = getter()
+            except Exception as e:
+                logging.exception(e)
+                continue
 
             if api_endpoint.last_updated == last_updated:
                 continue  # the API has not updated yet
