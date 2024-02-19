@@ -6,9 +6,11 @@ from pytest_httpx import HTTPXMock
 
 from reskyblock import Client
 
-_AUCTIONS_DATA = (pathlib.Path(__file__).resolve().parents[0] / "data" / "auctions.json").read_text()
-_AUCTIONS_ENDED_DATA = (pathlib.Path(__file__).resolve().parents[0] / "data" / "auctions_ended.json").read_text()
-_BAZAAR_DATA = (pathlib.Path(__file__).resolve().parents[0] / "data" / "bazaar.json").read_text()
+_AUCTIONS_DATA = (pathlib.Path(__file__).resolve().parents[0] / "data" / "auctions.json").read_text(encoding="utf-8")
+_AUCTIONS_ENDED_DATA = (pathlib.Path(__file__).resolve().parents[0] / "data" / "auctions_ended.json").read_text(
+    encoding="utf-8"
+)
+_BAZAAR_DATA = (pathlib.Path(__file__).resolve().parents[0] / "data" / "bazaar.json").read_text(encoding="utf-8")
 
 
 @pytest.fixture
