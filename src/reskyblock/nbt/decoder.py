@@ -30,7 +30,7 @@ class DecodedNBT(Struct):
     gems: list[str] = []
     scrolls: list[str] = []
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         nbt_data = _decode_nbt(self.raw_data)
         ea = nbt_data["tag"]["ExtraAttributes"]
 

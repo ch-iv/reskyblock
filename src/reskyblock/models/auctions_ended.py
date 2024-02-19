@@ -19,7 +19,7 @@ class EndedAuction(msgspec.Struct):
     price: int
     bin: bool
     item_bytes: str
-    did: DecodedNBT = None
+    did: DecodedNBT | None = None
 
     def __post_init__(self) -> None:
         self.did = DecodedNBT(raw_data=self.item_bytes)

@@ -49,7 +49,7 @@ class Auction(msgspec.Struct):
     decoded_nbt: DecodedNBT = None
     command: str = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.decoded_nbt = DecodedNBT(raw_data=self.item_bytes)
 
         self.command = (

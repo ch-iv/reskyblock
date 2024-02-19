@@ -26,6 +26,10 @@ parallel = true
 plugins = ["covdefaults"]
 source = ["reskyblock"]
 
+[tool.coverage.report]
+fail_under=95
+
+
 [tool.pdm]
 distribution = true
 
@@ -48,7 +52,6 @@ lint = [
 [tool.mypy]
 packages = ["reskyblock", "tests"]
 python_version = "3.12"
-
 disallow_any_generics = false
 disallow_untyped_decorators = true
 implicit_reexport = false

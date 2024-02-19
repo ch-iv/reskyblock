@@ -36,3 +36,25 @@ def test_get_bazaar(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(json=json.loads(_BAZAAR_DATA))
 
     client.get_bazaar()
+
+
+def test_continuous_update_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
+    httpx_mock.add_response(json=json.loads(_AUCTIONS_DATA))
+
+    for auction in client.get_auctions_continuous():
+        assert len(auction.auctions) == 1000
+        break
+
+
+def test_continuous_update_auctions_ended(httpx_mock: HTTPXMock, client: Client) -> None:
+    httpx_mock.add_response(json=json.loads(_AUCTIONS_ENDED_DATA))
+
+    for _ in client.get_auctions_ended_continuous():
+        break
+
+
+def test_continuous_update_bazaar(httpx_mock: HTTPXMock, client: Client) -> None:
+    httpx_mock.add_response(json=json.loads(_BAZAAR_DATA))
+
+    for _ in client.get_bazaar_continuous():
+        break
