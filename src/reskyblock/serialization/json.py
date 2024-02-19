@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Any
 
 import msgspec
 
@@ -14,7 +13,7 @@ class AbstractJSONDecoder(ABC):
 
     @staticmethod
     @abstractmethod
-    def serialize[T](data: bytes, model: T) -> Any:
+    def serialize[T](data: bytes, model: type[T]) -> T:
         """Serializes a raw bytes object into a given data structure model
         :param data: Raw bytes to serialize
         :param model: Model used for serialization
@@ -26,7 +25,7 @@ class MSGSpecDecoder(AbstractJSONDecoder):
     """JSON decoder that uses the msgspec library"""
 
     @staticmethod
-    def serialize[T: msgspec.Struct](data: bytes, model: T) -> Any:
+    def serialize[T: msgspec.Struct](data: bytes, model: type[T]) -> T:
         """Serializes a raw bytes object into a given data structure model
         :param data: Raw bytes to serialize
         :param model: Model used for serialization

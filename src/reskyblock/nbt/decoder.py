@@ -4,6 +4,7 @@ This relies on the https://pypi.org/project/NBT/ library.
 import json as dum_json
 from base64 import b64decode
 from io import BytesIO
+from typing import Any
 
 import nbt
 from msgspec import Struct
@@ -11,7 +12,7 @@ from msgspec import Struct
 __all__ = ("DecodedNBT",)
 
 
-def _decode_nbt(raw_data):
+def _decode_nbt(raw_data) -> Any:
     return nbt.nbt.NBTFile(fileobj=BytesIO(b64decode(raw_data)))[0][0]
 
 
