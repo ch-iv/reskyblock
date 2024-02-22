@@ -57,3 +57,8 @@ class Auction(msgspec.Struct):
             f"{self.uuid[9:13]}-{self.uuid[13:17]}-"
             f"{self.uuid[17:21]}-{self.uuid[21:]}"
         )
+
+
+class AllAuctions(msgspec.Struct):
+    last_updated: int
+    auctions: list[Auction]
