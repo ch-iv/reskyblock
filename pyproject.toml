@@ -1,6 +1,6 @@
 [project]
 name = "reskyblock"
-version = "0.1.2"
+version = "0.1.3"
 description = "Python API wrapper for Hypixel SkyBlock"
 authors = [
     {name = "ch-iv", email = "alicesummer38@gmail.com"},
@@ -150,4 +150,4 @@ docstring-code-format = true
 docstring-code-line-length = 88
 
 [tool.codespell]
-skip = 'tests/data/item_bytes.txt,tests/data/auctions.json,tests/data/auctions_ended.json,tests/data/bazaar.json'
+skip = 'tests/data/item_bytes.txt,tests/data/auctions.json,tests/data/auctions2.json,tests/data/auctions_ended.json,tests/data/bazaar.json'

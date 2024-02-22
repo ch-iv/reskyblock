@@ -2,12 +2,14 @@ import logging
 import time
 from collections.abc import Callable, Iterator
 
+from httpx import HTTPStatusError
+
 from reskyblock.http import AbstractHTTPClient, HTTPXClient
-from reskyblock.models import Auctions, AuctionsEnded, Bazaar
+from reskyblock.models import AllAuctions, Auctions, AuctionsEnded, Bazaar
 from reskyblock.serialization import AbstractJSONDecoder, MSGSpecDecoder
 from reskyblock.urls import _prepare_auctions_ended_url, _prepare_auctions_url, _prepare_bazaar_url
 
-type APIEndpoint = Auctions | AuctionsEnded | Bazaar
+type APIEndpoint = Auctions | AuctionsEnded | Bazaar | AllAuctions
 type APIEndpointGetter = Callable[[], APIEndpoint]
 
 __all__ = ("Client",)
@@ -42,8 +44,29 @@ class Client:
         self._bazaar_last_updated = bazaar.last_updated
         return bazaar
 
+    def get_all_auctions(self) -> AllAuctions:
+        """Get auctions from all pages"""
+        auctions = []
+        page = 0
+        last_updated = 0
+        while 1:
+            try:
+                auctions_page = self.get_auctions(page)
+                auctions.extend(auctions_page.auctions)
+                last_updated = auctions_page.last_updated
+                page += 1
+            except HTTPStatusError:
+                break
+        return AllAuctions(last_updated, auctions)
+
     @staticmethod
-    def _get_continuous[T: APIEndpoint](getter: APIEndpointGetter, expected_update_interval: float) -> Iterator[T]:
+    def _get_continuous[T: APIEndpoint](
+        getter: APIEndpointGetter, expected_update_interval: float, update_getter: APIEndpointGetter = None
+    ) -> Iterator[T]:
+        use_update_getter_for_return = update_getter is None
+        if update_getter is None:
+            update_getter = getter
+
         last_updated = 0
         while 1:
             next_update = last_updated / 1000 + expected_update_interval
@@ -51,15 +74,23 @@ class Client:
                 continue
 
             try:
-                api_endpoint = getter()
+                update_api_endpoint = update_getter()
             except Exception as e:
                 logging.exception(e)
                 continue
 
-            if api_endpoint.last_updated == last_updated:
+            if update_api_endpoint.last_updated == last_updated:
                 continue  # the API has not updated yet
 
-            last_updated = api_endpoint.last_updated
+            last_updated = update_api_endpoint.last_updated
+            if use_update_getter_for_return:
+                api_endpoint = update_api_endpoint
+            else:
+                try:
+                    api_endpoint = getter()
+                except Exception as e:
+                    logging.exception(e)
+                    continue
             yield api_endpoint
 
     def get_auctions_continuous(self) -> Iterator[Auctions]:
@@ -70,3 +101,6 @@ class Client:
 
     def get_bazaar_continuous(self) -> Iterator[Bazaar]:
         return self._get_continuous(self.get_bazaar, 66.5)
+
+    def get_all_auctions_continuous(self) -> Iterator[list[Auctions]]:
+        return self._get_continuous(self.get_all_auctions, 66.5, self.get_auctions)
