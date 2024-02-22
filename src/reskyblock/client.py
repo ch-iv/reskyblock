@@ -1,6 +1,8 @@
+import asyncio
 import logging
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
+from functools import partial
 
 from httpx import HTTPStatusError
 
@@ -44,12 +46,12 @@ class Client:
         self._bazaar_last_updated = bazaar.last_updated
         return bazaar
 
-    async def get_all_auctions(self) -> AllAuctions:
+    async def get_all_auctions(self, max_pages: int = 100) -> AllAuctions:
         """Get auctions from all pages"""
         auctions = []
         page = 0
         last_updated = 0
-        while 1:
+        while page <= max_pages:
             try:
                 auctions_page = await self.get_auctions(page)
                 auctions.extend(auctions_page.auctions)
@@ -71,8 +73,8 @@ class Client:
         while 1:
             next_update = last_updated / 1000 + expected_update_interval
             if next_update > time.time():  # the next update is in the future
-                continue
-
+                sleep_for = next_update - time.time()
+                await asyncio.sleep(max(sleep_for, 0.1))
             try:
                 update_api_endpoint = await update_getter()
             except Exception as e:
@@ -97,10 +99,10 @@ class Client:
         return self._get_continuous(self.get_auctions, 66.5)
 
     async def get_auctions_ended_continuous(self) -> AsyncIterator[AuctionsEnded]:
-        return self._get_continuous(self.get_auctions_ended, 66.5)
+        return self._get_continuous(self.get_auctions_ended, 60)
 
     async def get_bazaar_continuous(self) -> AsyncIterator[Bazaar]:
-        return self._get_continuous(self.get_bazaar, 66.5)
+        return self._get_continuous(self.get_bazaar, 20)
 
-    async def get_all_auctions_continuous(self) -> AsyncIterator[list[Auctions]]:
-        return self._get_continuous(self.get_all_auctions, 66.5, self.get_auctions)
+    async def get_all_auctions_continuous(self, max_pages: int = 100) -> AsyncIterator[list[Auctions]]:
+        return self._get_continuous(partial(self.get_all_auctions, max_pages), 66.5, self.get_auctions)
