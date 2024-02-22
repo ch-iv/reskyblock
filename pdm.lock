@@ -5,7 +5,7 @@
 groups = ["default", "test", "lint", "slotscheck", "pytest-mock", "pytest_httpx"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:ab323a08584c4f07e92376a1428c4f4e66cf9eb4d9733b96abcb94563969e94a"
+content_hash = "sha256:e3933c86264cd67d342e71ce5620c4280e2cb718311a6af5d151327a88049e26"
 
 [[package]]
 name = "anyio"
@@ -391,6 +391,20 @@ dependencies = [
 files = [
     {file = "pytest-8.0.1-py3-none-any.whl", hash = "sha256:3e4f16fe1c0a9dc9d9389161c127c3edc5d810c38d6793042fb81d9f48a59fca"},
     {file = "pytest-8.0.1.tar.gz", hash = "sha256:267f6563751877d772019b13aacbe4e860d73fe8f651f28112e9ac37de7513ae"},
+]
+
+[[package]]
+name = "pytest-asyncio"
+version = "0.23.5"
+requires_python = ">=3.8"
+summary = "Pytest support for asyncio"
+groups = ["test"]
+dependencies = [
+    "pytest<9,>=7.0.0",
+]
+files = [
+    {file = "pytest-asyncio-0.23.5.tar.gz", hash = "sha256:3a048872a9c4ba14c3e90cc1aa20cbc2def7d01c7c8db3777ec281ba9c057675"},
+    {file = "pytest_asyncio-0.23.5-py3-none-any.whl", hash = "sha256:4e7093259ba018d58ede7d5315131d21923a60f8a6e9ee266ce1589685c89eac"},
 ]
 
 [[package]]

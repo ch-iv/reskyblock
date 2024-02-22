@@ -20,62 +20,70 @@ def client() -> Client:
     return Client()
 
 
-def test_client() -> None:
+@pytest.mark.asyncio
+async def test_client() -> None:
     _ = Client()
 
 
-def test_get_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
+@pytest.mark.asyncio
+async def test_get_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(json=json.loads(_AUCTIONS_DATA))
+    await client.get_auctions()
 
-    client.get_auctions()
 
-
-def test_get_auctions_ended(httpx_mock: HTTPXMock, client: Client) -> None:
+@pytest.mark.asyncio
+async def test_get_auctions_ended(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(json=json.loads(_AUCTIONS_ENDED_DATA))
 
-    client.get_auctions_ended()
+    await client.get_auctions_ended()
 
 
-def test_get_bazaar(httpx_mock: HTTPXMock, client: Client) -> None:
+@pytest.mark.asyncio
+async def test_get_bazaar(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(json=json.loads(_BAZAAR_DATA))
 
-    client.get_bazaar()
+    await client.get_bazaar()
 
 
-def test_continuous_update_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
+@pytest.mark.asyncio
+async def test_continuous_update_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(json=json.loads(_AUCTIONS_DATA))
 
-    for auction in client.get_auctions_continuous():
+    async for auction in await client.get_auctions_continuous():
         assert len(auction.auctions) == 1000
         break
 
 
-def test_continuous_update_auctions_ended(httpx_mock: HTTPXMock, client: Client) -> None:
+@pytest.mark.asyncio
+async def test_continuous_update_auctions_ended(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(json=json.loads(_AUCTIONS_ENDED_DATA))
 
-    for _ in client.get_auctions_ended_continuous():
+    async for _ in await client.get_auctions_ended_continuous():
         break
 
 
-def test_continuous_update_bazaar(httpx_mock: HTTPXMock, client: Client) -> None:
+@pytest.mark.asyncio
+async def test_continuous_update_bazaar(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(json=json.loads(_BAZAAR_DATA))
 
-    for _ in client.get_bazaar_continuous():
+    async for _ in await client.get_bazaar_continuous():
         break
 
 
-def test_get_all_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
+@pytest.mark.asyncio
+async def test_get_all_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=0", json=json.loads(_AUCTIONS_DATA))
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=1", json=json.loads(_AUCTIONS_DATA2))
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=2", status_code=404)
 
-    auctions = client.get_all_auctions()
+    auctions = await client.get_all_auctions()
     assert len(auctions.auctions) == 2000
 
 
-def test_get_all_auctions_continuous(httpx_mock: HTTPXMock, client: Client) -> None:
+@pytest.mark.asyncio
+async def test_get_all_auctions_continuous(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=0", json=json.loads(_AUCTIONS_DATA))
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=1", json=json.loads(_AUCTIONS_DATA2))
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=2", status_code=404)
-    for _ in client.get_all_auctions_continuous():
+    async for _ in await client.get_all_auctions_continuous():
         break
