@@ -26,10 +26,10 @@ class DecodedNBT(Struct):
     dungeon_stars: int = 0
     hot_potato_count: int = 0
     rarity_upgrades: int = 0
-    enchantments: list[str] = []
     art_of_war_count: int = 0
-    gems: list[str] = []
-    scrolls: list[str] = []
+    gems: list[str] | None = []
+    scrolls: list[str] | None = []
+    enchantments: list[str] | None = []
 
     def __post_init__(self) -> None:
         nbt_data = _decode_nbt(self.raw_data)
