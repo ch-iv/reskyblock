@@ -76,7 +76,70 @@ def test_item_hyperion() -> None:
         "IMPLOSION_SCROLL",
     ]
 
+    assert did.dict() == {
+        "Count": 1,
+        "Damage": 0,
+        "id": 267,
+        "tag": {
+            "ExtraAttributes": {
+                "ability_scroll": None,
+                "art_of_war_count": 1,
+                "champion_combat_xp": 72582071.63017021,
+                "enchantments": {
+                    "champion": 10,
+                    "cleave": 6,
+                    "critical": 6,
+                    "cubism": 5,
+                    "dragon_hunter": 1,
+                    "ender_slayer": 7,
+                    "execute": 5,
+                    "experience": 4,
+                    "fire_aspect": 3,
+                    "first_strike": 4,
+                    "giant_killer": 6,
+                    "impaling": 3,
+                    "lethality": 6,
+                    "looting": 4,
+                    "luck": 6,
+                    "scavenger": 4,
+                    "smite": 7,
+                    "smoldering": 2,
+                    "syphon": 4,
+                    "thunderlord": 7,
+                    "ultimate_wise": 5,
+                    "vampirism": 6,
+                    "venomous": 5,
+                },
+                "gems": {
+                    "COMBAT_0": "FINE",
+                    "COMBAT_0_gem": "SAPPHIRE",
+                    "DEFENSIVE_0": {"quality": "PERFECT", "uuid": "84c26564-2981-431f-9051-273668a0af50"},
+                    "DEFENSIVE_0_gem": "AMETHYST",
+                    "SAPPHIRE_0": "FINE",
+                    "unlocked_slots": None,
+                },
+                "hot_potato_count": 15,
+                "id": "HYPERION",
+                "modifier": "heroic",
+                "rarity_upgrades": 1,
+                "stats_book": 177662,
+                "timestamp": 1657706160000,
+                "upgrade_level": 9,
+                "uuid": "21616c2d-6a14-4690-9b52-8d1857ed30cb",
+            },
+            "HideFlags": 254,
+            "Unbreakable": 1,
+            "display": {"Lore": None, "Name": "§dHeroic Hyperion §6✪§6✪§6✪§6✪§6✪§c➍"},
+            "ench": None,
+        },
+    }
+
 
 @pytest.mark.parametrize("raw_data", _BULK_NBTS)
 def test_bulk_nbts(raw_data: str) -> None:
     DecodedNBT(raw_data)
+
+
+@pytest.mark.parametrize("raw_data", _BULK_NBTS)
+def test_bulk_nbts_dicts(raw_data: str) -> None:
+    DecodedNBT(raw_data).dict()

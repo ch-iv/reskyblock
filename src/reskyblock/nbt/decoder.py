@@ -74,3 +74,25 @@ class DecodedNBT(Struct):
         if ea.get("ability_scroll") is not None:
             for scroll_tag in ea.get("ability_scroll").tags:
                 self.scrolls.append(scroll_tag.value)
+
+    def dict(self) -> dict:
+        """Creates a dictionary representation of the NBT data.
+
+        This is a representation of the NBT structure as it is parsed by the NBT library.
+        Some fields of the returned dictionary may be different from the instance attributes
+        of the `DecodedNBT` class.
+        """
+
+        def _build_dict(node: Any) -> dict:
+            """Recursive helper function"""
+            d = {}
+            for key in list(node):
+                tag = node.get(key)
+                if tag.id == 10:  # Compound tag
+                    d[key] = _build_dict(tag)
+                else:
+                    d[key] = tag.value
+            return d
+
+        nbt_data = _decode_nbt(self.raw_data)
+        return _build_dict(nbt_data)
