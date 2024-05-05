@@ -1,6 +1,7 @@
 """NBT (Named Binary Tag) protocol decoder
 This relies on the https://pypi.org/project/NBT/ library.
 """
+
 import json as dum_json
 from base64 import b64decode
 from io import BytesIO
@@ -32,6 +33,8 @@ class DecodedNBT(Struct):
     enchantments: list[str] | None = []
 
     def __post_init__(self) -> None:
+        if self.raw_data == "":
+            return
         nbt_data = _decode_nbt(self.raw_data)
         ea = nbt_data["tag"]["ExtraAttributes"]
 

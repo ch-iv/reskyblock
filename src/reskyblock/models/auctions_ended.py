@@ -22,7 +22,8 @@ class EndedAuction(msgspec.Struct):
     decoded_nbt: DecodedNBT | None = None
 
     def __post_init__(self) -> None:
-        self.decoded_nbt = DecodedNBT(raw_data=self.item_bytes)
+        if self.decoded_nbt is None:
+            self.decoded_nbt = DecodedNBT(raw_data=self.item_bytes)
 
 
 class AuctionsEnded(msgspec.Struct, rename="camel"):

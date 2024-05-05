@@ -50,13 +50,15 @@ class Auction(msgspec.Struct):
     command: str | None = None
 
     def __post_init__(self) -> None:
-        self.decoded_nbt = DecodedNBT(raw_data=self.item_bytes)
+        if self.decoded_nbt is None:
+            self.decoded_nbt = DecodedNBT(raw_data=self.item_bytes)
 
-        self.command = (
-            f"/viewauction {self.uuid[:9]}-"
-            f"{self.uuid[9:13]}-{self.uuid[13:17]}-"
-            f"{self.uuid[17:21]}-{self.uuid[21:]}"
-        )
+        if self.command is None:
+            self.command = (
+                f"/viewauction {self.uuid[:9]}-"
+                f"{self.uuid[9:13]}-{self.uuid[13:17]}-"
+                f"{self.uuid[17:21]}-{self.uuid[21:]}"
+            )
 
 
 class AllAuctions(msgspec.Struct):

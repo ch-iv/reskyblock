@@ -1,23 +1,69 @@
 import asyncio
 import logging
 import time
+from abc import ABC, abstractmethod
 from collections.abc import AsyncIterator, Awaitable, Callable
 from functools import partial
 
 from httpx import HTTPStatusError
 
 from reskyblock.http import AbstractAsyncHTTPClient, HTTPXAsyncClient
-from reskyblock.models import AllAuctions, Auctions, AuctionsEnded, Bazaar
+from reskyblock.models import (
+    AllAuctions,
+    Auction,
+    Auctions,
+    AuctionsEnded,
+    Bazaar,
+    EndedAuction,
+    Product,
+    QuickStatus,
+    Summary,
+)
+from reskyblock.nbt import DecodedNBT
 from reskyblock.serialization import AbstractJSONDecoder, MSGSpecDecoder
 from reskyblock.urls import _prepare_auctions_ended_url, _prepare_auctions_url, _prepare_bazaar_url
 
 type APIEndpoint = Auctions | AuctionsEnded | Bazaar | AllAuctions
 type APIEndpointGetter = Callable[[], Awaitable[APIEndpoint]]
 
-__all__ = ("Client",)
+__all__ = ("Client", "MockClient", "AbstractClient")
 
 
-class Client:
+class AbstractClient(ABC):
+    @abstractmethod
+    async def get_auctions(self, page: int = 0) -> Auctions:
+        pass
+
+    @abstractmethod
+    async def get_auctions_ended(self) -> AuctionsEnded:
+        pass
+
+    @abstractmethod
+    async def get_bazaar(self) -> Bazaar:
+        pass
+
+    @abstractmethod
+    async def get_all_auctions(self, max_pages: int = 100) -> AllAuctions:
+        pass
+
+    @abstractmethod
+    async def get_auctions_continuous(self) -> AsyncIterator[Auctions]:
+        pass
+
+    @abstractmethod
+    async def get_auctions_ended_continuous(self) -> AsyncIterator[AuctionsEnded]:
+        pass
+
+    @abstractmethod
+    async def get_bazaar_continuous(self) -> AsyncIterator[Bazaar]:
+        pass
+
+    @abstractmethod
+    async def get_all_auctions_continuous(self, max_pages: int = 100) -> AsyncIterator[AllAuctions]:
+        pass
+
+
+class Client(AbstractClient):
     def __init__(self) -> None:
         self._http_client: AbstractAsyncHTTPClient = HTTPXAsyncClient()
         self._json_decoder: AbstractJSONDecoder = MSGSpecDecoder()
@@ -104,5 +150,128 @@ class Client:
     async def get_bazaar_continuous(self) -> AsyncIterator[Bazaar]:
         return self._get_continuous(self.get_bazaar, 20)
 
-    async def get_all_auctions_continuous(self, max_pages: int = 100) -> AsyncIterator[list[Auctions]]:
+    async def get_all_auctions_continuous(self, max_pages: int = 100) -> AsyncIterator[AllAuctions]:
         return self._get_continuous(partial(self.get_all_auctions, max_pages), 66.5, self.get_auctions)
+
+
+class MockClient(AbstractClient):
+    """This is mock client intended for the users of the library to test code that relies on
+    the reskyblock client.
+
+    The getters return a minimal complete representation of each API page. The continuous producers
+    yield only a single item.
+    """
+
+    async def get_auctions(self, page: int = 0) -> Auctions:
+        return Auctions(
+            success=True,
+            page=0,
+            total_pages=1,
+            total_auctions=1,
+            last_updated=0,
+            auctions=[
+                Auction(
+                    start=0,
+                    end=0,
+                    item_name="mock item",
+                    extra="",
+                    category="",
+                    tier="",
+                    starting_bid=1,
+                    item_bytes="",
+                    claimed=False,
+                    highest_bid_amount=0,
+                    last_updated=0,
+                    bin=True,
+                    uuid="",
+                    auctioneer="",
+                    profile_id="",
+                    decoded_nbt=DecodedNBT(
+                        raw_data="",
+                        skyblock_id="MOCK_ITEM",
+                    ),
+                    command="",
+                )
+            ],
+        )
+
+    async def get_auctions_ended(self) -> AuctionsEnded:
+        return AuctionsEnded(
+            success=True,
+            last_updated=0,
+            auctions=[
+                EndedAuction(
+                    auction_id="",
+                    seller="",
+                    seller_profile="",
+                    buyer="",
+                    timestamp=0,
+                    price=1,
+                    bin=True,
+                    item_bytes="",
+                    decoded_nbt=DecodedNBT(
+                        raw_data="",
+                        skyblock_id="MOCK_ITEM",
+                    ),
+                )
+            ],
+        )
+
+    async def get_bazaar(self) -> Bazaar:
+        return Bazaar(
+            success=True,
+            last_updated=0,
+            products={
+                "MOCK_PRODUCT": Product(
+                    product_id="MOCK_PRODUCT",
+                    sell_summary=[
+                        Summary(
+                            amount=1,
+                            price_per_unit=1.0,
+                            orders=1,
+                        )
+                    ],
+                    buy_summary=[
+                        Summary(
+                            amount=1,
+                            price_per_unit=1.0,
+                            orders=1,
+                        )
+                    ],
+                    quick_status=QuickStatus(
+                        product_id="MOCK_PRODUCT",
+                        sell_price=1.0,
+                        sell_volume=0,
+                        sell_moving_week=0,
+                        sell_orders=0,
+                        buy_price=1.0,
+                        buy_volume=0,
+                        buy_moving_week=0,
+                        buy_orders=0,
+                    ),
+                )
+            },
+        )
+
+    async def get_all_auctions(self, max_pages: int = 100) -> AllAuctions:
+        auctions = await self.get_auctions()
+        return AllAuctions(last_updated=0, auctions=auctions.auctions)
+
+    async def get_auctions_continuous(self) -> AsyncIterator[Auctions]:
+        return self._iterator_single_item(self.get_auctions)
+
+    async def get_auctions_ended_continuous(self) -> AsyncIterator[AuctionsEnded]:
+        return self._iterator_single_item(self.get_auctions_ended)
+
+    async def get_bazaar_continuous(self) -> AsyncIterator[Bazaar]:
+        return self._iterator_single_item(self.get_bazaar)
+
+    async def get_all_auctions_continuous(self, max_pages: int = 100) -> AsyncIterator[AllAuctions]:
+        return self._iterator_single_item(self.get_all_auctions)
+
+    @staticmethod
+    async def _iterator_single_item[T: APIEndpoint](func: APIEndpointGetter) -> AsyncIterator[T]:
+        """This is a helper function that creates an async iterator, which produces only one item.
+        The produced item is the result of an `APIEndpoint` getter function.
+        """
+        yield await func()
