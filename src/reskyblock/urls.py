@@ -1,4 +1,5 @@
 """URLs for the SkyBlock API"""
+
 import random
 
 _AUCTIONS_URL = "https://api.hypixel.net/v2/skyblock/auctions"

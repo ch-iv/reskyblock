@@ -1,4 +1,5 @@
 """This module provides all needed functionality for dealing with http requests"""
+
 from abc import ABC, abstractmethod
 
 import httpx
