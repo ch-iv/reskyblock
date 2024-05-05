@@ -74,21 +74,21 @@ class Client(AbstractClient):
     async def get_auctions(self, page: int = 0) -> Auctions:
         """Get a single page of active auctions"""
         resp_bytes = await self._http_client.get(url=_prepare_auctions_url(page))
-        auctions = self._json_decoder.serialize(resp_bytes, Auctions)
+        auctions: Auctions = self._json_decoder.serialize(resp_bytes, Auctions)
         self._auctions_last_updated = auctions.last_updated
         return auctions
 
     async def get_auctions_ended(self) -> AuctionsEnded:
         """Get ended auctions"""
         resp_bytes = await self._http_client.get(url=_prepare_auctions_ended_url())
-        auctions_ended = self._json_decoder.serialize(resp_bytes, AuctionsEnded)
+        auctions_ended: AuctionsEnded = self._json_decoder.serialize(resp_bytes, AuctionsEnded)
         self._auctions_ended_last_updated = auctions_ended.last_updated
         return auctions_ended
 
     async def get_bazaar(self) -> Bazaar:
         """Get bazaar endpoint"""
         resp_bytes = await self._http_client.get(url=_prepare_bazaar_url())
-        bazaar = self._json_decoder.serialize(resp_bytes, Bazaar)
+        bazaar: Bazaar = self._json_decoder.serialize(resp_bytes, Bazaar)
         self._bazaar_last_updated = bazaar.last_updated
         return bazaar
 

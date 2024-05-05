@@ -15,12 +15,16 @@ async def test_client() -> None:
 
 @pytest.mark.asyncio
 async def test_get_auctions(client: Client) -> None:
-    assert (await client.get_auctions()).auctions[0].decoded_nbt.skyblock_id == "MOCK_ITEM"
+    auctions = await client.get_auctions()
+    assert auctions.auctions[0].decoded_nbt is not None
+    assert auctions.auctions[0].decoded_nbt.skyblock_id == "MOCK_ITEM"
 
 
 @pytest.mark.asyncio
 async def test_get_auctions_ended(client: Client) -> None:
-    assert (await client.get_auctions_ended()).auctions[0].decoded_nbt.skyblock_id == "MOCK_ITEM"
+    auctions_ended = await client.get_auctions_ended()
+    assert auctions_ended.auctions[0].decoded_nbt is not None
+    assert auctions_ended.auctions[0].decoded_nbt.skyblock_id == "MOCK_ITEM"
 
 
 @pytest.mark.asyncio
