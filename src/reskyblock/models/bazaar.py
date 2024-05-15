@@ -37,3 +37,4 @@ class Bazaar(msgspec.Struct, rename="camel"):
     success: bool
     last_updated: int
     products: dict[str, Product]
+    received_at: int = 0

@@ -30,3 +30,4 @@ class AuctionsEnded(msgspec.Struct, rename="camel"):
     success: bool
     last_updated: int
     auctions: list[EndedAuction]
+    received_at: int = 0

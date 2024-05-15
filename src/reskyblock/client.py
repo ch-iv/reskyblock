@@ -75,6 +75,7 @@ class Client(AbstractClient):
         """Get a single page of active auctions"""
         resp_bytes = await self._http_client.get(url=_prepare_auctions_url(page))
         auctions: Auctions = self._json_decoder.serialize(resp_bytes, Auctions)
+        auctions.received_at = time.time() * 1000
         self._auctions_last_updated = auctions.last_updated
         return auctions
 
@@ -82,6 +83,7 @@ class Client(AbstractClient):
         """Get ended auctions"""
         resp_bytes = await self._http_client.get(url=_prepare_auctions_ended_url())
         auctions_ended: AuctionsEnded = self._json_decoder.serialize(resp_bytes, AuctionsEnded)
+        auctions_ended.received_at = time.time() * 1000
         self._auctions_ended_last_updated = auctions_ended.last_updated
         return auctions_ended
 
@@ -89,6 +91,7 @@ class Client(AbstractClient):
         """Get bazaar endpoint"""
         resp_bytes = await self._http_client.get(url=_prepare_bazaar_url())
         bazaar: Bazaar = self._json_decoder.serialize(resp_bytes, Bazaar)
+        bazaar.received_at = time.time() * 1000
         self._bazaar_last_updated = bazaar.last_updated
         return bazaar
 
@@ -105,7 +108,7 @@ class Client(AbstractClient):
                 page += 1
             except HTTPStatusError:
                 break
-        return AllAuctions(last_updated, auctions)
+        return AllAuctions(last_updated, auctions, time.time() * 1000)
 
     @staticmethod
     async def _get_continuous[T: APIEndpoint](

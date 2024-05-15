@@ -51,6 +51,7 @@ async def test_continuous_update_auctions(httpx_mock: HTTPXMock, client: Client)
 
     async for auction in await client.get_auctions_continuous():
         assert len(auction.auctions) == 1000
+        assert auction.received_at > 0
         break
 
 
@@ -78,6 +79,7 @@ async def test_get_all_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
 
     auctions = await client.get_all_auctions()
     assert len(auctions.auctions) == 2000
+    assert auctions.received_at > 0
 
 
 @pytest.mark.asyncio
