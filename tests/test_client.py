@@ -85,6 +85,7 @@ async def test_get_all_auctions(httpx_mock: HTTPXMock, client: Client) -> None:
 @pytest.mark.asyncio
 async def test_get_all_auctions_continuous(httpx_mock: HTTPXMock, client: Client) -> None:
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=0", json=json.loads(_AUCTIONS_DATA))
+    httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=0", json=json.loads(_AUCTIONS_DATA))
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=1", json=json.loads(_AUCTIONS_DATA2))
     httpx_mock.add_response(url="https://api.hypixel.net/v2/skyblock/auctions?page=2", status_code=404)
     async for _ in await client.get_all_auctions_continuous():
