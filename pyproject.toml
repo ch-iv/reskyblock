@@ -1,12 +1,11 @@
 [project]
 name = "reskyblock"
-version = "0.2.5"
+version = "0.2.6"
 description = "Python API wrapper for Hypixel SkyBlock"
 authors = [
     {name = "ch-iv", email = "alicesummer38@gmail.com"},
 ]
 dependencies = [
-    "pyright>=1.1.350",
     "httpx>=0.26.0",
     "msgspec>=0.18.6",
     "nbt>=1.5.1",
@@ -44,6 +43,7 @@ test = [
     "pytest-asyncio>=0.23.5",
 ]
 lint = [
+    "pyright>=1.1.350",
     "pre-commit>=3.6.1",
     "ruff>=0.2.1",
     "mypy>=1.8.0",
