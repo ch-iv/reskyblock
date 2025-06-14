@@ -26,7 +26,7 @@ class Auctions(msgspec.Struct, rename="camel"):
     total_auctions: int
     last_updated: int
     auctions: list[Auction]
-    received_at: int = 0
+    received_at: float = 0
 
 
 class Auction(msgspec.Struct):
@@ -65,4 +65,4 @@ class Auction(msgspec.Struct):
 class AllAuctions(msgspec.Struct):
     last_updated: int
     auctions: list[Auction]
-    received_at: int = 0
+    received_at: float = 0
