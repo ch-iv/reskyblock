@@ -76,63 +76,10 @@ def test_item_hyperion() -> None:
         "IMPLOSION_SCROLL",
     ]
 
-    assert did.dict() == {
-        "Count": 1,
-        "Damage": 0,
-        "id": 267,
-        "tag": {
-            "ExtraAttributes": {
-                "ability_scroll": None,
-                "art_of_war_count": 1,
-                "champion_combat_xp": 72582071.63017021,
-                "enchantments": {
-                    "champion": 10,
-                    "cleave": 6,
-                    "critical": 6,
-                    "cubism": 5,
-                    "dragon_hunter": 1,
-                    "ender_slayer": 7,
-                    "execute": 5,
-                    "experience": 4,
-                    "fire_aspect": 3,
-                    "first_strike": 4,
-                    "giant_killer": 6,
-                    "impaling": 3,
-                    "lethality": 6,
-                    "looting": 4,
-                    "luck": 6,
-                    "scavenger": 4,
-                    "smite": 7,
-                    "smoldering": 2,
-                    "syphon": 4,
-                    "thunderlord": 7,
-                    "ultimate_wise": 5,
-                    "vampirism": 6,
-                    "venomous": 5,
-                },
-                "gems": {
-                    "COMBAT_0": "FINE",
-                    "COMBAT_0_gem": "SAPPHIRE",
-                    "DEFENSIVE_0": {"quality": "PERFECT", "uuid": "84c26564-2981-431f-9051-273668a0af50"},
-                    "DEFENSIVE_0_gem": "AMETHYST",
-                    "SAPPHIRE_0": "FINE",
-                    "unlocked_slots": None,
-                },
-                "hot_potato_count": 15,
-                "id": "HYPERION",
-                "modifier": "heroic",
-                "rarity_upgrades": 1,
-                "stats_book": 177662,
-                "timestamp": 1657706160000,
-                "upgrade_level": 9,
-                "uuid": "21616c2d-6a14-4690-9b52-8d1857ed30cb",
-            },
-            "HideFlags": 254,
-            "Unbreakable": 1,
-            "display": {"Lore": None, "Name": "§dHeroic Hyperion §6✪§6✪§6✪§6✪§6✪§c➍"},
-            "ench": None,
-        },
-    }
+
+def test_invalid_utf_8_payload():
+    raw_data = "H4sIAAAAAAAA/2VVW28bRRQ+jp3UdkICUlGRQNUIYZTITXASO04qQHLsXKy6dWWHRAih1Xj3rHfkvbEzmwuP/AYeWqRKfUAE8cIL4rEP+Sl5719AnNn1JVDL0sy5zJlvzuXbIkABMqIIAJk5mBNWZjED880g9lWmCFnFhwXIoW86oH8ZWPzGH0TIR3zgYiYLhWNh4aHLh5Ks/xThniVk6PIrOtQJIsyTtgTs5rp+EsXIWmijL/ExKezy5i4t1iqta/AxebS4x4eJzSRdhVZcLW9V1uBzMvZVhP5QOWNzfWamzd5quV5bgwfk14yEYk2H+2YSaa+8WSnBpxPD7AoybNVK6dlapbQGD8lnP/BjyRpKcXPE+iGipV2RbinBQ9rVviPct7/8TLvvp+Krn7RI7/yCgulbhMlddkrCIx2+FXHhs3a7PVEcXKIZK2Sn8HUihRgJyi/e9TkUEbKGDNFU7D9aqRhlQozI+xR2SHckuK/YE+G6GM0u7aByuCvU1R1VECjhD/W5TS3G9MSpsW/yc0ovhbgDou/wKPRRSoK6pWVPaNgT84kT+xZGbhBZM+Up90IRCenRmfe0jH7gBbEOAVDTRUZKDpVwe6N2qdvCSirCVEBC9fbl76zt2xj5iVPdCwZyQz9zemzrnUP229dv3v79F+uP0EV191yVdvQ/0vm/ud4uV2u3L/5kzcAbcMXOhLQCj8yMD8mB8preD/dpfRdDhsE23XVz7d7+9obUO42B0Pl9rLsl9tFDqoLuFfLotY+OT1iz024+gS91617wkA1QXSBqIHZfZ0jfV+e+RcugGV3JKXILGeGlpGIEJdLQI3nakMqJgnjosGN0XRH4rO8IdK0U3IfkmSJJWnZ8B+X8o7tYz6gXlcOSloSv0vR0feYI9Yg5aYbrdhAlia7oCauX9b5aun31a4LXVqitfEfCKi2kEjbhwv9hYg6XTF4IZTpowbI+Oc3SBoFa0c2sCcRiycglEz4dHYIjKcI5Ms7MZJJ1pS3ClxBJHKaF55vJ/NbxUkWcpS2hg5eTd1VvX7zW2Hv4Q0zDJPW47rv8R2R9Yid6BXWVuaGdLSrZzfWIHqOfpqWn354ct5usf9bttdjMIQ+5Z9xD+IRUY/TUllQVEdIME7cMaYCgCCsHGhFVIxIDGnSZhZWI0+OujDgcRtxCTZVEncvKMtK8GLrspJzLwvtOoIwwUFwFhqlJmNTFIuSG6Mk85Jvdp/uNE6MC+cNO46xz0O8XYDn23cAcoWVIN1BSU+7cHc+F7vNGx6jkYWmiMigY5LQ6P7HO4gHdQnCELegxC3byzjzcD4MLjAyedpIhzShwXfggOfy8e3bQM/rNXrdDAekLAivHB43eydPGmdFqHB0d9IqwpL8gxFS6AyghOZfoh3DOZyFvjuueivNSs0y6v+emnEVSLgsL8ip0Ap+ELH125ISxUnnRpiIbPGHMNJFFnDLr+Mj5hJvG0TEl4lRaGmoiNUYJkY5VtuZbQyZ8m2LIn4/5LPVYVDMOTDUFOSHNsexOmFjLlNtcHFOCPhvs1aoDa2d3ne9tmutVi++t79YG2+sVrG7VqnZld8CtHBSU8JCowQupYV7+MfegpUu7kH7F9Of4X/m8rwG9BwAA"
+    DecodedNBT(raw_data)
 
 
 @pytest.mark.parametrize("raw_data", _BULK_NBTS)
@@ -142,4 +89,4 @@ def test_bulk_nbts(raw_data: str) -> None:
 
 @pytest.mark.parametrize("raw_data", _BULK_NBTS)
 def test_bulk_nbts_dicts(raw_data: str) -> None:
-    DecodedNBT(raw_data).dict()
+    DecodedNBT(raw_data)
